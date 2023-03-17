@@ -1,0 +1,53 @@
+*{
+    /* border: solid #39ff14 1px; */
+    font-size: 34px;
+    color: white;
+    text-align: center;
+}
+
+body{
+    display: flex;
+    justify-content: center;
+    background-color: #ebd4d4ee;
+}
+
+#board{
+    border: solid black;
+    background-color: black;
+    display: flex;
+    flex-direction: column;
+
+    width: 800px;
+    height: 800px;
+}
+
+.square{
+    flex: 1 0 auto;
+}
+
+.light{
+
+}
+
+.dark{
+
+}
+
+.row{
+    display: flex;
+    flex: 1 0 auto;
+}
+
+header{
+    margin: 10px;
+    display: flex;
+    justify-content: space-between;
+}
+
+header button{
+    background-color: black;
+    padding: 10px;
+    border-radius: 10px;
+}
+
+

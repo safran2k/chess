@@ -1,0 +1,16 @@
+STEP 1:
+Create basic homepage of website, include header bar that allows you to start a new game. Include section in center for where chess board will be.
+
+STEP 2:
+Style homepage and make it look pleasant. Create black-square and white-square classes for background colours.
+
+STEP 3:
+Write javascript that will generate the board. Add colour classes to each square
+
+STEP 4:
+Add classes that will be assigned when any square has a certain piece on it. Will probably have to find image files later. Class for each piece
+
+STEP 5:
+Make classes for black/white pieces.
+
+STEP 5:

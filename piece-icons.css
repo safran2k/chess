@@ -1,0 +1,47 @@
+.piece:hover{
+    transform: scale(1.15);
+}
+
+.piece{
+    display: block;
+    max-width: 100px;
+    max-height: 100px;
+    padding: 10px;
+    box-sizing: border-box;
+}
+.white.king{
+    content:url(images/whiteking.png);
+}
+.white.queen{
+    content:url(images/whitequeen.png);
+}
+.white.rook{
+    content:url(images/whiterook.png);
+}
+.white.bishop{
+    content:url(images/whitebishop.png);
+}
+.white.knight{
+    content:url(images/whiteknight.png);
+}
+.white.pawn{
+    content:url(images/whitepawn.png);
+}
+.black.king{
+    content:url(images/blackking.png);
+}
+.black.queen{
+    content:url(images/blackqueen.png);
+}
+.black.rook{
+    content:url(images/blackrook.png);
+}
+.black.bishop{
+    content:url(images/blackbishop.png);
+}
+.black.knight{
+    content:url(images/blackknight.png);
+}
+.black.pawn{
+    content:url(images/blackpawn.png);
+}

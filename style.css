@@ -22,7 +22,8 @@ body{
 }
 
 .square{
-    flex: 1 0 auto;
+    flex: 1 0 100px;
+    display: flex;
 }
 
 .light{
@@ -50,4 +51,31 @@ header button{
     border-radius: 10px;
 }
 
+.piece:hover{
+    transform: scale(1.15);
+}
+
+.selected{
+    /* transform: scale(1.15); */
+    border: solid 7px rgb(68, 208, 255);
+}
+
+.piece{
+    padding: 10px;
+}
+
+.image{
+    display: block;
+    max-width: 100px;
+    max-height: 100px;
+    box-sizing: border-box;
+}
+
+
+
+.available-move{
+    content: url(images/bubbles-png-11409.gif);
+    /* opacity: 0.8; */
+    
+}
 

@@ -1,5 +1,3 @@
-const board = document.querySelector('#board');
-
 function setColor(divContent, colorToSet) {
     divContent.style.backgroundColor = colorToSet;
 }
@@ -24,15 +22,14 @@ function generateBoard() {
         }
     }
 
-    rows = document.querySelectorAll('.row');
 }
 
 function populateBoard(){
     squares.forEach(square => {
         const x  = square.id.charAt(1);
         const y  = square.id.charAt(square.id.length-1);
-        (y>5) ? square.classList.add('black','piece') : 0;
-        (y<2) ? square.classList.add('white','piece') : 0;
+        (y>5) ? square.classList.add('black','piece', 'image') : 0;
+        (y<2) ? square.classList.add('white','piece', 'image') : 0;
         (y==1|y==6) ? square.classList.add('pawn') : 0;
         if(y==0|y==7){
             (x==0|x==7) ? square.classList.add('rook') : 0;
@@ -44,8 +41,41 @@ function populateBoard(){
     });
 }
 
-let rows;
+function makePiecesResponsive(){
+    pieces.forEach(selectedPiece => {
+        selectedPiece.addEventListener('click', () => {
+            resetSelectedPiece();
+            selectedPiece.classList.add('selected');
+            console.log("Selected piece:  " + selectedPiece.id);
+            let availableSquareIds =[];
+
+            availableSquareIds[0] =  selectedPiece.id.substring(0,4) + (+selectedPiece.id.substring(4) + 1);
+            availableSquareIds[1] =  selectedPiece.id.substring(0,4) + (+selectedPiece.id.substring(4) + 2);
+            for (idNumber in availableSquareIds){
+                console.log("availableSquare: " + availableSquareIds[idNumber]);
+                let newMove = document.createElement('div');
+                document.getElementById(availableSquareIds[idNumber]).appendChild(newMove);
+                newMove.classList.add('available-move', 'image');
+            }
+        });
+    });
+}
+
+function resetSelectedPiece(){
+    // DELETES ALL HTML within each square, removes all 'selected' classes
+    squares.forEach(square => {
+        square.innerHTML = '';
+        square.classList.remove('selected');
+    });
+}
+
+const board = document.querySelector('#board');
 generateBoard();
-rows = document.querySelectorAll('.row');
 squares = document.querySelectorAll('.square');
 populateBoard();
+let pieces = document.querySelectorAll('.piece');
+document.body.addEventListener('click', resetSelectedPiece, {
+    capture: true
+}); 
+makePiecesResponsive();
+

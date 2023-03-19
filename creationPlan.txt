@@ -13,4 +13,9 @@ Add classes that will be assigned when any square has a certain piece on it. Wil
 STEP 5:
 Make classes for black/white pieces.
 
-STEP 5:
+STEP 6:
+Make function that will populate the board with pieces by assigning classes to the correct sqaures. Make each of these classes reference 
+the corresponding piece image 
+
+STEP 7:
+Add logic for each piece, such than when click they will be "selected". Also highlight the moves that are available to that piece.

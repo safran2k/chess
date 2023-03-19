@@ -18,4 +18,5 @@ Make function that will populate the board with pieces by assigning classes to t
 the corresponding piece image 
 
 STEP 7:
-Add logic for each piece, such than when click they will be "selected". Also highlight the moves that are available to that piece.
+Add logic for each piece, such that when clicked they will be "selected". Also highlight the moves that are available to that piece. Make a function 
+that can read which piece has been selected, and then update the available squares accordingly.

@@ -2,6 +2,15 @@ function setColor(divContent, colorToSet) {
     divContent.style.backgroundColor = colorToSet;
 }
 
+function newGame(){
+    squares.forEach(square => {
+        square.classList.remove('piece', 'image', 'white', 'black', 'pawn', 'knight', 'bishop', 'rook', 'queen', 'king');
+        resetSelectedPiece();
+        populateBoard();
+        });
+    
+}
+
 function generateBoard() {
     let lastWasWhite = true;
     for(let y =0; y<8; y++) {
@@ -42,21 +51,13 @@ function populateBoard(){
 }
 
 function makePiecesResponsive(){
+    let pieces = document.querySelectorAll('.piece');
     pieces.forEach(selectedPiece => {
         selectedPiece.addEventListener('click', () => {
             resetSelectedPiece();
             selectedPiece.classList.add('selected');
-            console.log("Selected piece:  " + selectedPiece.id);
-            let availableSquareIds =[];
-
-            availableSquareIds[0] =  selectedPiece.id.substring(0,4) + (+selectedPiece.id.substring(4) + 1);
-            availableSquareIds[1] =  selectedPiece.id.substring(0,4) + (+selectedPiece.id.substring(4) + 2);
-            for (idNumber in availableSquareIds){
-                console.log("availableSquare: " + availableSquareIds[idNumber]);
-                let newMove = document.createElement('div');
-                document.getElementById(availableSquareIds[idNumber]).appendChild(newMove);
-                newMove.classList.add('available-move', 'image');
-            }
+            showAvailableMoves(selectedPiece);
+           
         });
     });
 }
@@ -65,11 +66,70 @@ function resetSelectedPiece(){
     // DELETES ALL HTML within each square, removes all 'selected' classes
     squares.forEach(square => {
         square.innerHTML = '';
-        square.classList.remove('selected');
+        square.classList.remove('selected', 'can-be-killed');
     });
 }
 
+function coOrdsToId(x, y) {
+    return "x" + x + "-y" + y;
+}
+
+function getDifferentSquareId(squareId, dx, dy){
+    let xvalue = +squareId.charAt(1);
+    let yvalue = +squareId.charAt(4);
+    return "x" + (xvalue + dx) + "-y" + (yvalue + dy);
+}
+
+function checkIfPieceCanMoveHere(selectedSquareId, squareIdToMoveTo){
+    //returns 0 if square doesnt exist or is occupied by ally piece, returns 2 if there's a piece it can kill, else return 1
+
+    let xvalue = +squareIdToMoveTo.charAt(1);
+    let yvalue = +squareIdToMoveTo.charAt(4);
+    if(xvalue < 0 | xvalue > 7) {
+        return 0;
+    } else if(yvalue < 0 | yvalue > 7) {
+        return 0;
+    } else {
+        const squareToMoveTo = document.getElementById(squareIdToMoveTo);
+        const selectedSquare = document.getElementById(selectedSquareId);
+        if(squareToMoveTo.classList.contains('piece')) {
+            if(squareToMoveTo.classList.contains('white') & selectedSquare.classList.contains('white')) {
+                return 0;
+            } else if (squareToMoveTo.classList.contains('black') & selectedSquare.classList.contains('black')) {
+                return 0;
+            } else {
+                return 2;
+            }
+        }
+    }
+    
+    return 1;
+}
+
+function pushIdToArrayIfValid(array, squareId) {
+    if(squareId.charAt(1) < 8)
+    array.push()
+}
+
+function showAvailableMoves(selectedPiece){
+    let availableSquareIds =[];
+
+    availableSquareIds.push(getDifferentSquareId(selectedPiece.id, 0, 1));
+    availableSquareIds.push(getDifferentSquareId(selectedPiece.id, 0, 2));
+    for (idNumber in availableSquareIds){
+        if(checkIfPieceCanMoveHere(selectedPiece.id, availableSquareIds[idNumber]) == 1) {
+            const newMove = document.createElement('div');
+            document.getElementById(availableSquareIds[idNumber]).appendChild(newMove);
+            newMove.classList.add('available-move', 'image');
+        } else if (checkIfPieceCanMoveHere(selectedPiece.id, availableSquareIds[idNumber]) == 2) {
+            document.getElementById(availableSquareIds[idNumber]).classList.add('can-be-killed');
+        }
+    }
+}
+
 const board = document.querySelector('#board');
+const newGameButton = document.getElementById('new-game');
+newGameButton.addEventListener('click', newGame)
 generateBoard();
 squares = document.querySelectorAll('.square');
 populateBoard();

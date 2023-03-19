@@ -1,0 +1,13 @@
+adding showAvailableMoves functionality to rook:
+adding a rook and selecting it makes it bug. adding a queen and then selecting the queen bugs. but after adding the queen, 
+THEN the rook works???????????????????????????????
+
+SOLUTION:
+one of my functions was using 
+
+
+
+
+new game button lets you select a square without pieces on: had to reset "pieces" variable when newgame is clicked
+
+

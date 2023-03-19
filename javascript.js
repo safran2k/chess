@@ -5,10 +5,11 @@ function setColor(divContent, colorToSet) {
 function newGame(){
     squares.forEach(square => {
         square.classList.remove('piece', 'image', 'white', 'black', 'pawn', 'knight', 'bishop', 'rook', 'queen', 'king');
-        resetSelectedPiece();
-        populateBoard();
-        });
-    
+        pieces.remove(square);
+    });
+    resetSelectedPiece();
+    populateBoard();
+    makePiecesResponsive();
 }
 
 function generateBoard() {
@@ -85,9 +86,12 @@ function checkIfPieceCanMoveHere(selectedSquareId, squareIdToMoveTo){
 
     let xvalue = +squareIdToMoveTo.charAt(1);
     let yvalue = +squareIdToMoveTo.charAt(4);
-    if(xvalue < 0 | xvalue > 7) {
+    if(squareIdToMoveTo.length > 5| xvalue > 7) {
+        //instead of xvalue < 0, if an element tries to access a square 
+        // on the left of the board (that doesnt exist), the id will have 
+        // a negative number, so we instead check that the id is not > 5
         return 0;
-    } else if(yvalue < 0 | yvalue > 7) {
+    } else if(yvalue > 7) {
         return 0;
     } else {
         const squareToMoveTo = document.getElementById(squareIdToMoveTo);
@@ -114,8 +118,104 @@ function pushIdToArrayIfValid(array, squareId) {
 function showAvailableMoves(selectedPiece){
     let availableSquareIds =[];
 
-    availableSquareIds.push(getDifferentSquareId(selectedPiece.id, 0, 1));
-    availableSquareIds.push(getDifferentSquareId(selectedPiece.id, 0, 2));
+    if(selectedPiece.classList.contains('pawn')){
+        if(selectedPiece.classList.contains('white')) {
+            
+            availableSquareIds.push(getDifferentSquareId(selectedPiece.id, 0, 1));
+            if(selectedPiece.id.includes("y1")){
+                availableSquareIds.push(getDifferentSquareId(selectedPiece.id, 0, 2));
+            }
+        }
+        if(selectedPiece.classList.contains('black')) {
+            availableSquareIds.push(getDifferentSquareId(selectedPiece.id, 0, -1));
+            if(selectedPiece.id.includes("y6")){
+                availableSquareIds.push(getDifferentSquareId(selectedPiece.id, 0, -2));
+            }
+        }
+    }
+
+    if(selectedPiece.classList.contains('knight')){
+        availableSquareIds.push(getDifferentSquareId(selectedPiece.id, 1, 2));
+        availableSquareIds.push(getDifferentSquareId(selectedPiece.id, 2, 1));
+        availableSquareIds.push(getDifferentSquareId(selectedPiece.id, 1, -2));
+        availableSquareIds.push(getDifferentSquareId(selectedPiece.id, 2, -1));
+        availableSquareIds.push(getDifferentSquareId(selectedPiece.id, -1, 2));
+        availableSquareIds.push(getDifferentSquareId(selectedPiece.id, -2, 1));
+        availableSquareIds.push(getDifferentSquareId(selectedPiece.id, -1, -2));
+        availableSquareIds.push(getDifferentSquareId(selectedPiece.id, -2, -1));
+    }
+
+    if(selectedPiece.classList.contains('bishop') | selectedPiece.classList.contains('queen')){
+        let counter = 1;
+        let block = 1;
+        do {
+            availableSquareIds.push(getDifferentSquareId(selectedPiece.id, counter, counter));
+            block = checkIfPieceCanMoveHere(selectedPiece.id, getDifferentSquareId(selectedPiece.id, counter, counter));
+            counter++;
+        } while(block ==1);
+        counter=1;
+        do {
+            availableSquareIds.push(getDifferentSquareId(selectedPiece.id, -counter, counter));
+            block = checkIfPieceCanMoveHere(selectedPiece.id, getDifferentSquareId(selectedPiece.id, -counter, counter));
+            counter++;
+        } while(block ==1);
+        counter=1;
+        do {
+            availableSquareIds.push(getDifferentSquareId(selectedPiece.id, counter, -counter));
+            block = checkIfPieceCanMoveHere(selectedPiece.id, getDifferentSquareId(selectedPiece.id, counter, -counter));
+            counter++;
+        } while(block ==1);
+        counter=1;
+        do {
+            availableSquareIds.push(getDifferentSquareId(selectedPiece.id, -counter, -counter));
+            block = checkIfPieceCanMoveHere(selectedPiece.id, getDifferentSquareId(selectedPiece.id, -counter, -counter));
+            counter++;
+        } while(block ==1);
+    }
+
+    if(selectedPiece.classList.contains('rook') | selectedPiece.classList.contains('queen')){
+        counter = 1;
+        block = 1;
+        do {
+            availableSquareIds.push(getDifferentSquareId(selectedPiece.id, 0, counter));
+            block = checkIfPieceCanMoveHere(selectedPiece.id, getDifferentSquareId(selectedPiece.id, 0, counter));
+            counter++;
+        } while(block ==1);
+        counter=1;
+        do {
+            availableSquareIds.push(getDifferentSquareId(selectedPiece.id, counter, 0));
+            block = checkIfPieceCanMoveHere(selectedPiece.id, getDifferentSquareId(selectedPiece.id, counter, 0));
+            counter++;
+        } while(block ==1);
+        counter=1;
+        do {
+            availableSquareIds.push(getDifferentSquareId(selectedPiece.id, 0, -counter));
+            block = checkIfPieceCanMoveHere(selectedPiece.id, getDifferentSquareId(selectedPiece.id, 0, -counter));
+            counter++;
+        } while(block ==1);
+        counter=1;
+        do {
+            availableSquareIds.push(getDifferentSquareId(selectedPiece.id, -counter, 0));
+            block = checkIfPieceCanMoveHere(selectedPiece.id, getDifferentSquareId(selectedPiece.id, -counter, 0));
+            counter++;
+        } while(block ==1);
+    }
+
+    if(selectedPiece.classList.contains('king')) {
+        availableSquareIds.push(getDifferentSquareId(selectedPiece.id, 1, 1));
+        availableSquareIds.push(getDifferentSquareId(selectedPiece.id, -1, 1));
+        availableSquareIds.push(getDifferentSquareId(selectedPiece.id, 1, -1));
+        availableSquareIds.push(getDifferentSquareId(selectedPiece.id, -1, -1));
+        availableSquareIds.push(getDifferentSquareId(selectedPiece.id, 0, 1));
+        availableSquareIds.push(getDifferentSquareId(selectedPiece.id, 1, 0));
+        availableSquareIds.push(getDifferentSquareId(selectedPiece.id, 0, -1));
+        availableSquareIds.push(getDifferentSquareId(selectedPiece.id, -1, 0));
+    }
+    
+    if(selectedPiece.classList.contains('pawn')){
+
+    }
+
     for (idNumber in availableSquareIds){
         if(checkIfPieceCanMoveHere(selectedPiece.id, availableSquareIds[idNumber]) == 1) {
             const newMove = document.createElement('div');

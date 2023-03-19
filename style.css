@@ -71,8 +71,16 @@ header button{
 }
 
 .can-be-killed{
-    border:  20px black;
+    border:  20px;
     border-style: dashed;
     border-radius: 0px;
+}
+
+.can-be-killed.white{
+    border-color: black;
+}
+
+.can-be-killed.black{
+    border-color: white;
 }
 

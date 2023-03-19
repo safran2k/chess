@@ -120,18 +120,46 @@ function showAvailableMoves(selectedPiece){
 
     if(selectedPiece.classList.contains('pawn')){
         if(selectedPiece.classList.contains('white')) {
-            
             availableSquareIds.push(getDifferentSquareId(selectedPiece.id, 0, 1));
             if(selectedPiece.id.includes("y1")){
                 availableSquareIds.push(getDifferentSquareId(selectedPiece.id, 0, 2));
             }
+            availableSquareIds.push(getDifferentSquareId(selectedPiece.id, 1, 1));
+            availableSquareIds.push(getDifferentSquareId(selectedPiece.id, -1, 1));
         }
         if(selectedPiece.classList.contains('black')) {
             availableSquareIds.push(getDifferentSquareId(selectedPiece.id, 0, -1));
             if(selectedPiece.id.includes("y6")){
                 availableSquareIds.push(getDifferentSquareId(selectedPiece.id, 0, -2));
             }
+            availableSquareIds.push(getDifferentSquareId(selectedPiece.id, 1, -1));
+            availableSquareIds.push(getDifferentSquareId(selectedPiece.id, -1, -1));
         }
+
+        console.table(availableSquareIds);
+        let blocked = false;
+        for (idNumber in availableSquareIds){
+            const squareToMoveTo = document.getElementById(availableSquareIds[idNumber]);
+            // console.log("selected pice : " + selectedPiece.id);
+            if(idNumber==0 & squareToMoveTo.classList.contains('piece')){
+                blocked = true;
+            }
+            
+            if(!(selectedPiece.id.charAt(1) == availableSquareIds[idNumber].charAt(1)) & squareToMoveTo.classList.contains('piece')){
+                if((selectedPiece.classList.contains('white') & squareToMoveTo.classList.contains('black')) | selectedPiece.classList.contains('black') & squareToMoveTo.classList.contains('white')){
+                    document.getElementById(availableSquareIds[idNumber]).classList.add('can-be-killed');
+                }
+            }
+            
+            if((selectedPiece.id.charAt(1) == availableSquareIds[idNumber].charAt(1)) & !document.getElementById(availableSquareIds[idNumber]).classList.contains('piece')){
+                if(!(idNumber == 1 & blocked)){
+                    const newMove = document.createElement('div');
+                    document.getElementById(availableSquareIds[idNumber]).appendChild(newMove);
+                    newMove.classList.add('available-move', 'image');
+                }
+            }
+        }
+
     }
 
     if(selectedPiece.classList.contains('knight')){
@@ -212,17 +240,15 @@ function showAvailableMoves(selectedPiece){
         availableSquareIds.push(getDifferentSquareId(selectedPiece.id, -1, 0));
     }
     
-    if(selectedPiece.classList.contains('pawn')){
-
-    }
-
-    for (idNumber in availableSquareIds){
-        if(checkIfPieceCanMoveHere(selectedPiece.id, availableSquareIds[idNumber]) == 1) {
-            const newMove = document.createElement('div');
-            document.getElementById(availableSquareIds[idNumber]).appendChild(newMove);
-            newMove.classList.add('available-move', 'image');
-        } else if (checkIfPieceCanMoveHere(selectedPiece.id, availableSquareIds[idNumber]) == 2) {
-            document.getElementById(availableSquareIds[idNumber]).classList.add('can-be-killed');
+    if(!selectedPiece.classList.contains('pawn')){
+        for (idNumber in availableSquareIds){
+            if(checkIfPieceCanMoveHere(selectedPiece.id, availableSquareIds[idNumber]) == 1) {
+                const newMove = document.createElement('div');
+                document.getElementById(availableSquareIds[idNumber]).appendChild(newMove);
+                newMove.classList.add('available-move', 'image');
+            } else if (checkIfPieceCanMoveHere(selectedPiece.id, availableSquareIds[idNumber]) == 2) {
+                document.getElementById(availableSquareIds[idNumber]).classList.add('can-be-killed');
+            }
         }
     }
 }

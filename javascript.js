@@ -3,11 +3,11 @@ function setColor(divContent, colorToSet) {
 }
 
 function newGame(){
+    resetSelectedPiece();
+    makePiecesResponsive();
     squares.forEach(square => {
         square.classList.remove('piece', 'image', 'white', 'black', 'pawn', 'knight', 'bishop', 'rook', 'queen', 'king');
-        pieces.remove(square);
     });
-    resetSelectedPiece();
     populateBoard();
     makePiecesResponsive();
 }

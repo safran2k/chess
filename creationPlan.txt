@@ -20,3 +20,9 @@ the corresponding piece image
 STEP 7:
 Add logic for each piece, such that when clicked they will be "selected". Also highlight the moves that are available to that piece. Make a function 
 that can read which piece has been selected, and then update the available squares accordingly.
+
+STEP 8:
+Create move function, which removes and assigns correct classes once an available move square has been selected (after a piece is selected).
+
+STEP 9:
+Create KILL function which allows user's piece to kill enemy piece, provided it is a legal chess move.

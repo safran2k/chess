@@ -58,7 +58,7 @@ function makePiecesResponsive(){
             resetSelectedPiece();
             selectedPiece.classList.add('selected');
             showAvailableMoves(selectedPiece);
-           
+           movePiece();
         });
     });
 }
@@ -67,7 +67,7 @@ function resetSelectedPiece(){
     // DELETES ALL HTML within each square, removes all 'selected' classes
     squares.forEach(square => {
         square.innerHTML = '';
-        square.classList.remove('selected', 'can-be-killed');
+        square.classList.remove('selected', 'can-be-killed', 'available-move');
     });
 }
 
@@ -76,9 +76,14 @@ function coOrdsToId(x, y) {
 }
 
 function getDifferentSquareId(squareId, dx, dy){
-    let xvalue = +squareId.charAt(1);
-    let yvalue = +squareId.charAt(4);
-    return "x" + (xvalue + dx) + "-y" + (yvalue + dy);
+    let xvalue = +squareId.charAt(1) + dx;
+    let yvalue = +squareId.charAt(4) + dy;
+    let newId = "x" + (xvalue) + "-y" + (yvalue);
+    if(newId.length > 5 & (xvalue < 8 & yvalue & 8)) {
+        return false;
+    } else {
+        return newId;
+    }
 }
 
 function checkIfPieceCanMoveHere(selectedSquareId, squareIdToMoveTo){
@@ -110,9 +115,10 @@ function checkIfPieceCanMoveHere(selectedSquareId, squareIdToMoveTo){
     return 1;
 }
 
-function pushIdToArrayIfValid(array, squareId) {
-    if(squareId.charAt(1) < 8)
-    array.push()
+function pushIdToArrayIfValid(array, squareId, dx, dy) {
+    if(getDifferentSquareId(squareId, dx, dy)) {
+        array.push(getDifferentSquareId(squareId, dx, dy));
+    }
 }
 
 function showAvailableMoves(selectedPiece){
@@ -136,11 +142,9 @@ function showAvailableMoves(selectedPiece){
             availableSquareIds.push(getDifferentSquareId(selectedPiece.id, -1, -1));
         }
 
-        console.table(availableSquareIds);
         let blocked = false;
         for (idNumber in availableSquareIds){
             const squareToMoveTo = document.getElementById(availableSquareIds[idNumber]);
-            // console.log("selected pice : " + selectedPiece.id);
             if(idNumber==0 & squareToMoveTo.classList.contains('piece')){
                 blocked = true;
             }
@@ -155,7 +159,8 @@ function showAvailableMoves(selectedPiece){
                 if(!(idNumber == 1 & blocked)){
                     const newMove = document.createElement('div');
                     document.getElementById(availableSquareIds[idNumber]).appendChild(newMove);
-                    newMove.classList.add('available-move', 'image');
+                    document.getElementById(availableSquareIds[idNumber]).classList.add('available-move');
+                    newMove.classList.add('available-move-bubble', 'image');
                 }
             }
         }
@@ -245,12 +250,34 @@ function showAvailableMoves(selectedPiece){
             if(checkIfPieceCanMoveHere(selectedPiece.id, availableSquareIds[idNumber]) == 1) {
                 const newMove = document.createElement('div');
                 document.getElementById(availableSquareIds[idNumber]).appendChild(newMove);
-                newMove.classList.add('available-move', 'image');
+                document.getElementById(availableSquareIds[idNumber]).classList.add('available-move');
+                newMove.classList.add('available-move-bubble', 'image');
             } else if (checkIfPieceCanMoveHere(selectedPiece.id, availableSquareIds[idNumber]) == 2) {
                 document.getElementById(availableSquareIds[idNumber]).classList.add('can-be-killed');
             }
         }
     }
+}
+
+function movePiece() {
+    let availableMoves = document.querySelectorAll('.available-move');
+    let currentlySelectedPiece = document.querySelector('.selected');
+    availableMoves.forEach(move => {
+        move.addEventListener('click', () => {
+            list = currentlySelectedPiece.classList.value.split(" ");
+            for(selectorClass in list) {
+                // containerSquare.classList.add(currentlySelectedPiece.classList[selectorClass]);
+                console.log(list[selectorClass]);
+                move.classList.add(list[selectorClass]);
+                if(list[selectorClass] != 'square'){
+                    currentlySelectedPiece.classList.remove(list[selectorClass]);
+                }
+            }
+        });
+    });
+
+    makePiecesResponsive();
+
 }
 
 const board = document.querySelector('#board');
@@ -264,4 +291,5 @@ document.body.addEventListener('click', resetSelectedPiece, {
     capture: true
 }); 
 makePiecesResponsive();
+movePiece();
 

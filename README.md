@@ -1,7 +1,7 @@
 # chess
 Interactive 2D Chess game. User will be able to move pieces around and play as if it's a real chess. I have coded this all from scratch
 
-[**Live preview**](https://safran2k.github.io/etch-a-sketch/index.html)
+[**Live preview**](https://safran2k.github.io/chess/index.html)
 
 
 

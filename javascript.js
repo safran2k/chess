@@ -1,15 +1,24 @@
+const board = document.querySelector('#board');
+const newGameButton = document.getElementById('new-game');
+
+let squareClicked = false;
+newGameButton.addEventListener('click', newGame)
+generateBoard();
+squares = document.querySelectorAll('.square');
+populateBoard();
+updateBoard();
+document.body.addEventListener('click', resetSelectedPieceOutsideOfSquares); 
+
 function setColor(divContent, colorToSet) {
     divContent.style.backgroundColor = colorToSet;
 }
 
 function newGame(){
     resetSelectedPiece();
-    makePiecesResponsive();
     squares.forEach(square => {
         square.classList.remove('piece', 'image', 'white', 'black', 'pawn', 'knight', 'bishop', 'rook', 'queen', 'king');
     });
     populateBoard();
-    makePiecesResponsive();
 }
 
 function generateBoard() {
@@ -23,7 +32,7 @@ function generateBoard() {
             const square = document.createElement('div');
             square.classList.add('square');
             square.id = "x" + x + "-y" + y;
-            row.style.height = "100px";
+            row.style.height = "75px";
             lastWasWhite = !lastWasWhite;
             setColor(square, (lastWasWhite ? "#bb002f" : "rgb(237 192 192)"));
             
@@ -48,18 +57,6 @@ function populateBoard(){
             (x==3) ? square.classList.add('queen') : 0;
             (x==4) ? square.classList.add('king') : 0;
         }
-    });
-}
-
-function makePiecesResponsive(){
-    pieces = document.querySelectorAll('.piece');
-    pieces.forEach(selectedPiece => {
-        selectedPiece.addEventListener('click', () => {
-            resetSelectedPiece();
-            selectedPiece.classList.add('selected');
-            showAvailableMoves(selectedPiece);
-        //    movePiece();
-        });
     });
 }
 
@@ -277,43 +274,21 @@ function showAvailableMoves(selectedPiece){
     }
 }
 
-function movePiece() {
-    let availableMoves = document.querySelectorAll('.available-move');
-    let currentlySelectedPiece = document.querySelector('.selected');
-    availableMoves.forEach(move => {
-        move.addEventListener('click', () => {
-            list = currentlySelectedPiece.classList.value.split(" ");
-            for(selectorClass in list) {
-                // containerSquare.classList.add(currentlySelectedPiece.classList[selectorClass]);
-                move.classList.add(list[selectorClass]);
-                if(list[selectorClass] != 'square'){
-                    currentlySelectedPiece.classList.remove(list[selectorClass]);
-                }
-            }
-            // makePiecesResponsive();
-        });
-    });
-}
-
 function updateBoard() {
     squares.forEach(square => {
         square.addEventListener('click', () =>{
             squareClicked = true;
             let currentlySelectedPiece = document.querySelector('.selected');
+
             if(currentlySelectedPiece){
-                console.log('there is a selected piece');
                 if(!square.classList.contains('available-move')){
-                    console.log('not clicked a bubble');
                     if(!square.classList.contains('can-be-killed')){
-                        console.log('not targeted some guy');
                         resetSelectedPiece();
                     }
                 }
             }
 
-
             if(currentlySelectedPiece & !square.classList.contains('available-move')) {
-                console.log('there is a selected piece and weve not clicked bubble');
                 resetSelectedPiece();
             }
 
@@ -368,21 +343,4 @@ function resetSelectedPieceOutsideOfSquares(e) {
     }
     squareClicked = false;
 }
-
-const board = document.querySelector('#board');
-const newGameButton = document.getElementById('new-game');
-
-let squareClicked = false;
-newGameButton.addEventListener('click', newGame)
-generateBoard();
-squares = document.querySelectorAll('.square');
-populateBoard();
-let pieces = document.querySelectorAll('.piece');
-// makePiecesResponsive();
-// movePiece();
-updateBoard();
-document.body.addEventListener('click', resetSelectedPieceOutsideOfSquares); 
-
-
-
 

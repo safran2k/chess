@@ -5,14 +5,31 @@
     text-align: center;
 }
 
+div::-moz-selection { background:transparent; }
+div::selection { background:transparent; }
+
 body{
     display: flex;
     justify-content: center;
     background-color: #ebd4d4ee;
 }
 
+#x0-y7{
+    border-top-left-radius: 25px;
+}
+#x7-y7{
+    border-top-right-radius: 25px;
+}
+#x0-y0{
+    border-bottom-left-radius: 25px;
+}
+#x7-y0{
+    border-bottom-right-radius: 25px;
+}
+
 #board{
-    border: solid black;
+    border: solid 6px black;
+    border-radius: 25px;
     background-color: black;
     display: flex;
     flex-direction: column;
@@ -34,13 +51,15 @@ body{
 header{
     margin: 10px;
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
+
 }
 
 header button{
-    background-color: black;
+    background-color: #7e001f;
     padding: 10px;
     border-radius: 10px;
+    border: solid 3px black;
 }
 
 .piece:hover, button:hover{

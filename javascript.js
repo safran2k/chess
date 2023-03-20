@@ -125,10 +125,6 @@ function resetSelectedPiece(){
     });
 }
 
-function coOrdsToId(x, y) {
-    return "x" + x + "-y" + y;
-}
-
 function getDifferentSquareId(squareId, dx, dy){
     let xvalue = +squareId.charAt(1) + dx;
     let yvalue = +squareId.charAt(4) + dy;

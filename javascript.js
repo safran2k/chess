@@ -1,12 +1,12 @@
 const board = document.querySelector('#board');
 const newGameButton = document.getElementById('new-game');
+newGameButton.addEventListener('click', newGame);
 
 let squareClicked = false;
-newGameButton.addEventListener('click', newGame)
 generateBoard();
-squares = document.querySelectorAll('.square');
+const squares = document.querySelectorAll('.square');
 populateBoard();
-updateBoard();
+makeBoardResponsive();
 document.body.addEventListener('click', resetSelectedPieceOutsideOfSquares); 
 
 function setColor(divContent, colorToSet) {
@@ -32,7 +32,7 @@ function generateBoard() {
             const square = document.createElement('div');
             square.classList.add('square');
             square.id = "x" + x + "-y" + y;
-            row.style.height = "75px";
+            row.style.height = "100px";
             lastWasWhite = !lastWasWhite;
             setColor(square, (lastWasWhite ? "#bb002f" : "rgb(237 192 192)"));
             
@@ -60,8 +60,64 @@ function populateBoard(){
     });
 }
 
+function makeBoardResponsive() {
+    squares.forEach(square => {
+        square.addEventListener('click', () =>{
+            squareClicked = true;
+            let currentlySelectedPiece = document.querySelector('.selected');
+
+            if(currentlySelectedPiece){
+                if(!square.classList.contains('available-move')){
+                    if(!square.classList.contains('can-be-killed')){
+                        resetSelectedPiece();
+                    }
+                }
+            }
+
+            if(currentlySelectedPiece & !square.classList.contains('available-move')) {
+                resetSelectedPiece();
+            }
+
+            if(square.classList.contains('piece') & !square.classList.contains('can-be-killed')){
+                resetSelectedPiece();
+                square.classList.add('selected');
+                showAvailableMoves(square);
+            } else {
+                if(square.classList.contains('available-move')){
+                    let pieceToMoveClassList = currentlySelectedPiece.classList.value.split(" ");
+                    for(selectorClass in pieceToMoveClassList) {
+                        square.classList.add(pieceToMoveClassList[selectorClass]);
+                        if(pieceToMoveClassList[selectorClass] != 'square'){
+                            currentlySelectedPiece.classList.remove(pieceToMoveClassList[selectorClass]);
+                        }
+                    }
+                    resetSelectedPiece();
+                }
+
+                if(square.classList.contains('can-be-killed')){
+                    let pieceToMoveClassList = currentlySelectedPiece.classList.value.split(" ");
+                    let pieceToKillClassList = square.classList.value.split(" ");
+
+                    for(deathClass in pieceToKillClassList){
+                        if(pieceToKillClassList[deathClass] != 'square'){
+                            square.classList.remove(pieceToKillClassList[deathClass]);
+                        }
+                    }
+
+                    for(selectorClass in pieceToMoveClassList) {
+                        square.classList.add(pieceToMoveClassList[selectorClass]);
+                        if(pieceToMoveClassList[selectorClass] != 'square'){
+                            currentlySelectedPiece.classList.remove(pieceToMoveClassList[selectorClass]);
+                        }
+                    }
+                    resetSelectedPiece();
+                }
+            }
+        });
+    });
+}
+
 function resetSelectedPiece(){
-    console.log('reset selected piece');
     // DELETES ALL HTML within each square, removes all 'selected' classes
     squares.forEach(square => {
         square.innerHTML = '';
@@ -274,71 +330,9 @@ function showAvailableMoves(selectedPiece){
     }
 }
 
-function updateBoard() {
-    squares.forEach(square => {
-        square.addEventListener('click', () =>{
-            squareClicked = true;
-            let currentlySelectedPiece = document.querySelector('.selected');
 
-            if(currentlySelectedPiece){
-                if(!square.classList.contains('available-move')){
-                    if(!square.classList.contains('can-be-killed')){
-                        resetSelectedPiece();
-                    }
-                }
-            }
-
-            if(currentlySelectedPiece & !square.classList.contains('available-move')) {
-                resetSelectedPiece();
-            }
-
-            if(square.classList.contains('piece') & !square.classList.contains('can-be-killed')){
-                console.log('piece clicked');
-                resetSelectedPiece();
-                square.classList.add('selected');
-                showAvailableMoves(square);
-            } else {
-                if(square.classList.contains('available-move')){
-                    console.log('move clicked');
-                    let pieceToMoveClassList = currentlySelectedPiece.classList.value.split(" ");
-                    for(selectorClass in pieceToMoveClassList) {
-                        square.classList.add(pieceToMoveClassList[selectorClass]);
-                        if(pieceToMoveClassList[selectorClass] != 'square'){
-                            currentlySelectedPiece.classList.remove(pieceToMoveClassList[selectorClass]);
-                        }
-                    }
-                    resetSelectedPiece();
-                }
-
-                if(square.classList.contains('can-be-killed')){
-                    console.log('KILLIN TIME');
-                    let pieceToMoveClassList = currentlySelectedPiece.classList.value.split(" ");
-                    let pieceToKillClassList = square.classList.value.split(" ");
-                    console.log(pieceToKillClassList);
-
-                    for(deathClass in pieceToKillClassList){
-                        if(pieceToKillClassList[deathClass] != 'square'){
-                            square.classList.remove(pieceToKillClassList[deathClass]);
-                        }
-                    }
-
-                    for(selectorClass in pieceToMoveClassList) {
-                        square.classList.add(pieceToMoveClassList[selectorClass]);
-                        if(pieceToMoveClassList[selectorClass] != 'square'){
-                            currentlySelectedPiece.classList.remove(pieceToMoveClassList[selectorClass]);
-                        }
-                    }
-                    resetSelectedPiece();
-                }
-            }
-        });
-    });
-}
-
-function resetSelectedPieceOutsideOfSquares(e) {
-    console.log('body click');
+function resetSelectedPieceOutsideOfSquares() {
     if(!squareClicked){
-        console.log('moveNotClicked');
         resetSelectedPiece();
     }
     squareClicked = false;

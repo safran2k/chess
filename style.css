@@ -86,7 +86,6 @@ header button{
 
 .available-move-bubble{
     content: url(images/bubbles-png-11409.gif);
-    /* opacity: 0.8; */
 }
 
 .can-be-killed{

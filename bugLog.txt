@@ -18,3 +18,19 @@ pawn was able to kill anything in front of it
 SOLUTION:
 showAvailableMoves function was working so that if an enemy piece is in the selected piece's path, it can kill. this rule however does not apply to pawns.
 had to use conditionality to stop the pawn from following the same rules here as the rest of the pieces.
+
+
+function loop. makePiecesResponsive and movePiece are calling eachother, seem to be getting called an exponential number of times, crashing the programme.
+SOLUTION:
+i THINK i need a new function that will update the board. i think this will work in the following way:
+    remove any current listeners.
+    check if there are any selected elements, if yes, then add listeners for the possible move.
+    else  if there are not any selected elements, add listeners for the pieces to be selected.
+
+this didn't work
+
+SOLUTION #2:
+had to redo my approach to the MOVE and KILL function. instead of searching for where pieces are, and then assigning an event listener for each piece,
+i decided to just search every square and then use conditional logic to give it functionality IF there's a piece on it.
+the benefit of this was that i no longer had to update the board everytime a move had been made. my previous way of programming this game meant that
+an infinite loop was inevitable, as the board would have to be updated every time a move was made/piece was selected.

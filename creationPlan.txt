@@ -26,3 +26,12 @@ Create move function, which removes and assigns correct classes once an availabl
 
 STEP 9:
 Create KILL function which allows user's piece to kill enemy piece, provided it is a legal chess move.
+
+------------------------------------------------------------------------------------------------------------
+CHANGES
+------------------------------------------------------------------------------------------------------------
+
+STEP 8 and 9 had to be re-done, as it was causing issues with updating the board.
+
+STEP 10:
+Remove Move and Kill function, put functionality of both into an updateBoard function that sets functionality of each square and doesn't need re-updating

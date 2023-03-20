@@ -52,18 +52,19 @@ function populateBoard(){
 }
 
 function makePiecesResponsive(){
-    let pieces = document.querySelectorAll('.piece');
+    pieces = document.querySelectorAll('.piece');
     pieces.forEach(selectedPiece => {
         selectedPiece.addEventListener('click', () => {
             resetSelectedPiece();
             selectedPiece.classList.add('selected');
             showAvailableMoves(selectedPiece);
-           movePiece();
+        //    movePiece();
         });
     });
 }
 
 function resetSelectedPiece(){
+    console.log('reset selected piece');
     // DELETES ALL HTML within each square, removes all 'selected' classes
     squares.forEach(square => {
         square.innerHTML = '';
@@ -128,25 +129,42 @@ function showAvailableMoves(selectedPiece){
         if(selectedPiece.classList.contains('white')) {
             availableSquareIds.push(getDifferentSquareId(selectedPiece.id, 0, 1));
             if(selectedPiece.id.includes("y1")){
-                availableSquareIds.push(getDifferentSquareId(selectedPiece.id, 0, 2));
+                let squareInFront = document.getElementById(getDifferentSquareId(selectedPiece.id, 0, 1));
+                if(!squareInFront.classList.contains('piece')) {
+                    availableSquareIds.push(getDifferentSquareId(selectedPiece.id, 0, 2));
+                }
             }
-            availableSquareIds.push(getDifferentSquareId(selectedPiece.id, 1, 1));
-            availableSquareIds.push(getDifferentSquareId(selectedPiece.id, -1, 1));
+            if(!selectedPiece.id.includes("x7")){
+                availableSquareIds.push(getDifferentSquareId(selectedPiece.id, 1, 1));
+            }
+            if(!selectedPiece.id.includes("x0")){
+                availableSquareIds.push(getDifferentSquareId(selectedPiece.id, -1, 1));
+            }
         }
         if(selectedPiece.classList.contains('black')) {
             availableSquareIds.push(getDifferentSquareId(selectedPiece.id, 0, -1));
             if(selectedPiece.id.includes("y6")){
-                availableSquareIds.push(getDifferentSquareId(selectedPiece.id, 0, -2));
+                let squareInFront = document.getElementById(getDifferentSquareId(selectedPiece.id, 0, -1));
+                if(!squareInFront.classList.contains('piece')) {
+                    availableSquareIds.push(getDifferentSquareId(selectedPiece.id, 0, -2));
+                }
             }
-            availableSquareIds.push(getDifferentSquareId(selectedPiece.id, 1, -1));
-            availableSquareIds.push(getDifferentSquareId(selectedPiece.id, -1, -1));
+            if(!selectedPiece.id.includes("x7")){
+                availableSquareIds.push(getDifferentSquareId(selectedPiece.id, 1, -1));
+            }
+            if(!selectedPiece.id.includes("x0")){
+                availableSquareIds.push(getDifferentSquareId(selectedPiece.id, -1, -1));
+            }
         }
 
         let blocked = false;
+        console.table(availableSquareIds);
         for (idNumber in availableSquareIds){
             const squareToMoveTo = document.getElementById(availableSquareIds[idNumber]);
             if(idNumber==0 & squareToMoveTo.classList.contains('piece')){
                 blocked = true;
+            } else {
+                blocked = false;
             }
             
             if(!(selectedPiece.id.charAt(1) == availableSquareIds[idNumber].charAt(1)) & squareToMoveTo.classList.contains('piece')){
@@ -267,29 +285,104 @@ function movePiece() {
             list = currentlySelectedPiece.classList.value.split(" ");
             for(selectorClass in list) {
                 // containerSquare.classList.add(currentlySelectedPiece.classList[selectorClass]);
-                console.log(list[selectorClass]);
                 move.classList.add(list[selectorClass]);
                 if(list[selectorClass] != 'square'){
                     currentlySelectedPiece.classList.remove(list[selectorClass]);
                 }
             }
+            // makePiecesResponsive();
         });
     });
+}
 
-    makePiecesResponsive();
+function updateBoard() {
+    squares.forEach(square => {
+        square.addEventListener('click', () =>{
+            squareClicked = true;
+            let currentlySelectedPiece = document.querySelector('.selected');
+            if(currentlySelectedPiece){
+                console.log('there is a selected piece');
+                if(!square.classList.contains('available-move')){
+                    console.log('not clicked a bubble');
+                    if(!square.classList.contains('can-be-killed')){
+                        console.log('not targeted some guy');
+                        resetSelectedPiece();
+                    }
+                }
+            }
 
+
+            if(currentlySelectedPiece & !square.classList.contains('available-move')) {
+                console.log('there is a selected piece and weve not clicked bubble');
+                resetSelectedPiece();
+            }
+
+            if(square.classList.contains('piece') & !square.classList.contains('can-be-killed')){
+                console.log('piece clicked');
+                resetSelectedPiece();
+                square.classList.add('selected');
+                showAvailableMoves(square);
+            } else {
+                if(square.classList.contains('available-move')){
+                    console.log('move clicked');
+                    let pieceToMoveClassList = currentlySelectedPiece.classList.value.split(" ");
+                    for(selectorClass in pieceToMoveClassList) {
+                        square.classList.add(pieceToMoveClassList[selectorClass]);
+                        if(pieceToMoveClassList[selectorClass] != 'square'){
+                            currentlySelectedPiece.classList.remove(pieceToMoveClassList[selectorClass]);
+                        }
+                    }
+                    resetSelectedPiece();
+                }
+
+                if(square.classList.contains('can-be-killed')){
+                    console.log('KILLIN TIME');
+                    let pieceToMoveClassList = currentlySelectedPiece.classList.value.split(" ");
+                    let pieceToKillClassList = square.classList.value.split(" ");
+                    console.log(pieceToKillClassList);
+
+                    for(deathClass in pieceToKillClassList){
+                        if(pieceToKillClassList[deathClass] != 'square'){
+                            square.classList.remove(pieceToKillClassList[deathClass]);
+                        }
+                    }
+
+                    for(selectorClass in pieceToMoveClassList) {
+                        square.classList.add(pieceToMoveClassList[selectorClass]);
+                        if(pieceToMoveClassList[selectorClass] != 'square'){
+                            currentlySelectedPiece.classList.remove(pieceToMoveClassList[selectorClass]);
+                        }
+                    }
+                    resetSelectedPiece();
+                }
+            }
+        });
+    });
+}
+
+function resetSelectedPieceOutsideOfSquares(e) {
+    console.log('body click');
+    if(!squareClicked){
+        console.log('moveNotClicked');
+        resetSelectedPiece();
+    }
+    squareClicked = false;
 }
 
 const board = document.querySelector('#board');
 const newGameButton = document.getElementById('new-game');
+
+let squareClicked = false;
 newGameButton.addEventListener('click', newGame)
 generateBoard();
 squares = document.querySelectorAll('.square');
 populateBoard();
 let pieces = document.querySelectorAll('.piece');
-document.body.addEventListener('click', resetSelectedPiece, {
-    capture: true
-}); 
-makePiecesResponsive();
-movePiece();
+// makePiecesResponsive();
+// movePiece();
+updateBoard();
+document.body.addEventListener('click', resetSelectedPieceOutsideOfSquares); 
+
+
+
 
